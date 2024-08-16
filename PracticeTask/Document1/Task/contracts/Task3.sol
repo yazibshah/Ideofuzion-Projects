@@ -19,13 +19,15 @@ contract ToDoList is Ownable {
     }
 
     // Function to add a new task (only owner)
-    function addTask(string memory _description) public onlyOwner {
+    function addTask(string memory _description) public{
+        require(msg.sender==owner(),"Only Owner Can Access");
         tasks[taskCount] = Task(_description, false);
         taskCount++;
     }
 
     // Function to toggle the completion status of a task (only owner)
-    function toggleTask(uint256 _taskId) public onlyOwner {
+    function toggleTask(uint256 _taskId) public {
+        require(msg.sender==owner(),"Only Owner Can Toggle");
         require(_taskId < taskCount, "Task does not exist");
         tasks[_taskId].isCompleted = !tasks[_taskId].isCompleted;
     }
@@ -44,3 +46,5 @@ contract ToDoList is Ownable {
         return taskCount;
     }
 }
+
+

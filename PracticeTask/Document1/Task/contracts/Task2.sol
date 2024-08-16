@@ -2,10 +2,10 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/math/Math.sol";
 
 contract ChallengeTwo is Ownable {
-    using SafeMath for uint256; // Use SafeMath for uint256 to prevent overflow
+    using Math for uint256; // Use SafeMath for uint256 to prevent overflow
 
     uint256 public counter;
 
@@ -15,6 +15,6 @@ contract ChallengeTwo is Ownable {
 
     // Function to increment the counter by 1
     function incrementCounter() public onlyOwner {
-        counter = counter.add(1);
+        (,counter) = counter.tryAdd(1);
     }
 }

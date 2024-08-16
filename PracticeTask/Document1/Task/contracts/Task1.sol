@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 
 pragma solidity ^0.8.2;
-
-
 import "@openzeppelin/contracts/access/Ownable.sol";
 // Document 1 Task 1
 contract Task1 is Ownable{
