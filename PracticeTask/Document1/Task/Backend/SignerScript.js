@@ -1,22 +1,45 @@
 const { ethers } = require("ethers");
+require("dotenv").config(); // Load environment variables from .env file
 
-// Connect to the Ethereum network (you can use a provider like Infura or a local blockchain)
-const provider = new ethers.providers.JsonRpcProvider('http://localhost:8545');
+// Import the ABI from the JSON file
+const { abi } = require("../artifacts/contracts/EthSigner.sol/SignatureVerifier.json");
 
-// Create a wallet or use an existing one
-const privateKey = 'your-private-key';
-const wallet = new ethers.Wallet(privateKey, provider);
+// Load environment variables
+const API_URL = process.env.API_URL;
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
+const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
 
-// The message to sign
-const message = "Hello, this is a test message";
+// Connect to the Ethereum network
+const provider = new ethers.JsonRpcProvider(API_URL);
+const signer = new ethers.Wallet(PRIVATE_KEY, provider);
 
-// Get the message hash
-const messageHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(message));
+const contractInstance = new ethers.Contract(CONTRACT_ADDRESS, abi, signer);
 
-// Sign the message
-wallet.signMessage(ethers.utils.arrayify(messageHash)).then((signature) => {
-    console.log("Signature:", signature);
-    // You can now send the signature to the smart contract for verification
-}).catch((error) => {
-    console.error("Error signing the message:", error);
-});
+const message = "Hello Yazib";
+
+// Hash the message
+let hash = ethers.keccak256(ethers.solidityPacked(["string"], [message])); //encoded packed
+
+const signMessage = async () => {
+    // Sign the hash
+    const signature = await signer.signMessage(ethers.getBytes(hash));
+
+    // Create the Ethereum signed message hash
+    const ethHash = ethers.keccak256(
+        ethers.solidityPacked(
+            ["string", "bytes32"], 
+            ["\x19Ethereum Signed Message:\n32", hash]
+        )
+    );
+
+    console.log("Signer Address:", signer.address);
+    
+    // Extract v, r, s from the signature
+    const { v, r, s } = ethers.Signature.from(signature);
+
+    // Verify the signature with the contract
+    let boolean = await contractInstance.verify(signer.address, ethHash, r, s, v);
+    console.log("Signer Matched?", boolean);
+};
+
+signMessage();

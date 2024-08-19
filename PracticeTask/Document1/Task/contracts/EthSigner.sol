@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+/* // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 contract SignatureVerifier {
@@ -31,5 +31,17 @@ contract SignatureVerifier {
             s :=mload(add(_sig,32))
             v :=byte(0,mload(add(_sig,96)))
         }
+    }
+}
+ */
+
+ 
+pragma solidity ^0.8.2;
+
+contract SignatureVerifier{
+    
+    function verify(address _signer,bytes32 signedHash,  bytes32 r, bytes32 s, uint8 v) external pure returns(bool){
+        address expectedSigner= ecrecover(signedHash, v, r, s);
+        return expectedSigner==_signer;
     }
 }
