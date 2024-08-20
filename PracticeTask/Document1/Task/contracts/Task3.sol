@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.24;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
@@ -11,7 +11,7 @@ contract ToDoList is Ownable {
     }
 
     // Mapping to store tasks by their ID
-    mapping(uint256 => Task) private tasks;
+    mapping(uint256 => Task) public tasks;
     uint256 private taskCount;
 
     constructor() Ownable(msg.sender){
@@ -19,26 +19,16 @@ contract ToDoList is Ownable {
     }
 
     // Function to add a new task (only owner)
-    function addTask(string memory _description) public{
-        require(msg.sender==owner(),"Only Owner Can Access");
+    function addTask(string memory _description) public onlyOwner{
+        
         tasks[taskCount] = Task(_description, false);
         taskCount++;
     }
 
     // Function to toggle the completion status of a task (only owner)
-    function toggleTask(uint256 _taskId) public {
-        require(msg.sender==owner(),"Only Owner Can Toggle");
+    function toggleTask(uint256 _taskId) public onlyOwner{
         require(_taskId < taskCount, "Task does not exist");
         tasks[_taskId].isCompleted = !tasks[_taskId].isCompleted;
-    }
-
-    // Function to get task details
-    function getTask(uint256 _taskId) public view returns (string memory description, bool isCompleted) {
-        require(_taskId < taskCount, "Task does not exist");
-        Task memory task = tasks[_taskId];
-        description=task.description;
-        isCompleted=task.isCompleted;
-        return (description, isCompleted);
     }
 
     // Function to get the total number of tasks

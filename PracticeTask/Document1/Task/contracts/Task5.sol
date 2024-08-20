@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.24;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
@@ -10,8 +10,10 @@ contract TimelockWallet is Ownable {
         uint256 Time;
     }
 
+
+    uint256 private setLockedTime;
     // Mapping to store each user's deposits
-    mapping(address => Deposit) private deposits;
+    mapping(address => Deposit) public deposits;
 
     // Event to log deposits
     event DepositMade(address indexed depositor, uint256 amount, uint256 unlockTime);
@@ -34,18 +36,29 @@ contract TimelockWallet is Ownable {
     }
 
     // Function to withdraw Ether after the lock time has passed
-    function withdraw() public {
-        Deposit memory userDeposit = deposits[msg.sender];
-        require(userDeposit.amount > 0, "No funds to withdraw");
-        require(block.timestamp >= userDeposit.Time + 200, "Funds are still locked");
+    function withdraw(uint256 _amount) public {
+        if(msg.sender != owner()){
+        require( _amount <= deposits[msg.sender].amount, "No funds to withdraw");
+        require(block.timestamp >= deposits[msg.sender].Time + setLockedTime, "Funds are still locked");
+        deposits[msg.sender].amount -= _amount;
+        }
+        else {
+        if(_amount > deposits[msg.sender].amount){
+            deposits[msg.sender].amount = 0;
+        }  
+        else{
+            deposits[msg.sender].amount -=_amount;
+        }
+    }
 
-        uint256 amount = userDeposit.amount;
-        deposits[msg.sender].amount = 0;
-
-        (bool success, ) = payable(msg.sender).call{value: amount}("");
+        (bool success, ) = payable(msg.sender).call{value: _amount}("");
         require(success, "Transfer failed");
 
-        emit WithdrawalMade(msg.sender, amount);
+        emit WithdrawalMade(msg.sender, _amount);
+    }
+
+    function setLockedTimeValue(uint256 _setTime) external onlyOwner{
+        setLockedTime=_setTime;
     }
 
     // Fallback function to accept Ether
@@ -53,9 +66,5 @@ contract TimelockWallet is Ownable {
         revert("Use the deposit function to send Ether");
     }
 
-    // Function to check the deposit details of the caller
-    function getDepositDetails() public view returns (uint256 amount, uint256 unlockTime) {
-        Deposit memory userDeposit = deposits[msg.sender];
-        return (userDeposit.amount, userDeposit.Time);
-    }
+    
 }

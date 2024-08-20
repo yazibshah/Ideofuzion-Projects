@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.24;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
@@ -24,19 +24,29 @@ contract EtherWallet is Ownable {
     }
 
     // Only owner can withdraw Ether from the contract
-    function withdraw(uint256 _amount) public{
-        require(_amount <= address(this).balance && _amount <= balances[msg.sender], "Insufficient balance");
-        (bool success,)=payable(msg.sender).call{value:_amount}("");
-        emit Withdraw(msg.sender,success, _amount);
-    }
+   function withdraw(uint256 _amount) public payable {
+    require(_amount <= address(this).balance, "Insufficient contract balance");
 
-    function withdrawByOwner(uint256 _amount) public onlyOwner{
-        require(_amount <= address(this).balance, "Insufficient balance");
-        (bool success,)=payable(owner()).call{value:_amount}("");
-        emit Withdraw(msg.sender,success, _amount);
+    if (msg.sender != owner()) {
+        require(_amount <= balances[msg.sender], "Insufficient user balance");
+        balances[msg.sender] -= _amount;  // Deduct balance before transferring
+    } 
+    else {
+        if(_amount > balances[msg.sender]){
+            balances[msg.sender]=0;
+        }  
+        else{
+            balances[msg.sender] -=_amount;
+        }
     }
-
     
+    // Transfer the amount to the sender
+    (bool success, ) = payable(msg.sender).call{value: _amount}("");
+    require(success, "Transaction failed");
+
+    emit Withdraw(msg.sender, success, _amount);
+ }
+
     // Fallback function to accept Ether
     receive() external payable {
         balances[msg.sender] +=msg.value;

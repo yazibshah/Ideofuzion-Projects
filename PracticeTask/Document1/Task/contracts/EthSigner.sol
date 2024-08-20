@@ -36,7 +36,7 @@ contract SignatureVerifier {
  */
 
  
-pragma solidity ^0.8.2;
+pragma solidity 0.8.24;
 
 contract SignatureVerifier{
     

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.24;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
@@ -14,7 +14,12 @@ contract ChallengeTwo is Ownable {
     }
 
     // Function to increment the counter by 1
-    function incrementCounter() public onlyOwner {
-        (,counter) = counter.tryAdd(1);
+    function incrementCounter() public onlyOwner returns(bool){
+        (bool check,uint256 _counter) = counter.tryAdd(1);
+        if(check) {
+            counter=_counter;
+        }
+        return check;
+
     }
 }
