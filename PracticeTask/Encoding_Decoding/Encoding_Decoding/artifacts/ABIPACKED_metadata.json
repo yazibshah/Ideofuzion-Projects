@@ -1,0 +1,59 @@
+{
+	"compiler": {
+		"version": "0.8.24+commit.e11b9ed9"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "packed",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Encoding_Decoding/AbiPacked.sol": "ABIPACKED"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Encoding_Decoding/AbiPacked.sol": {
+			"keccak256": "0xe4745fd6ed1a92f02f86846e80af4d433f3fb83c3a87c248caafd1e5d25f7b83",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://26f94f0daf6eaa7c9472af22d7a6178de3b3026fc4c605deb8e7129419be6f5e",
+				"dweb:/ipfs/QmNik2vX59xYehS9qBx4fie32JKSLZgJxbVe4rLNMRaZew"
+			]
+		}
+	},
+	"version": 1
+}

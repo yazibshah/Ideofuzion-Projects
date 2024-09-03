@@ -1,0 +1,45 @@
+{
+	"compiler": {
+		"version": "0.8.24+commit.e11b9ed9"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Encoding_Decoding/EncodeWithSelector.sol": "En"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Encoding_Decoding/EncodeWithSelector.sol": {
+			"keccak256": "0x384d8580bc15d4e808bcd31f9959fb3ea1e396a97ac15f2af4124d7417ac1461",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6dc7cecd897b943594e0fdd309dde59b7e0c410e51a5fa823e9b5a1c4caa4088",
+				"dweb:/ipfs/QmdpXdctrGmCYakdJBkAaVwaE17jEQZAdVehNBTAV6qyZX"
+			]
+		}
+	},
+	"version": 1
+}
