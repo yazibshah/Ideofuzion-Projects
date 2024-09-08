@@ -4,7 +4,7 @@ const testnetRPC="https://bsc-testnet.bnbchain.org/";
 
 const provider=new ethers.JsonRpcProvider(testnetRPC);
 
-const PrivateKey="0x79064b7cadf24c1b32c008c4823f35dc5f3c73d9a3e115784eaa0b52f075f41a";
+const PrivateKey="";
 const wallet=new ethers.Wallet(PrivateKey,provider);
 
 const encodeCallAddress="0x300c4a0414fc38662A50ddEC19C5fDA8Ec71b18c";
@@ -38,14 +38,6 @@ async function main() {
     console.log(verify==wallet.address)
     console.log(wallet.address)
     
-
-    // const encodeCallsContract = new ethers.Contract(encodeCallAddress, [
-    //     "function callAddToken(bytes memory callData) public"
-    // ], wallet)
-
-    // // Send the transaction
-    // const tx = await encodeCallsContract.callAddToken(callData);
-    // console.log("Transaction confirmed:",await tx);
 
 }
 
