@@ -1,39 +1,48 @@
 const { ethers } = require("ethers");
 
-// Connect to your Ethereum provider (MetaMask or other wallet)
-const provider = new ethers.JsonRpcProvider("https://bsc-testnet-dataseed.bnbchain.org/");
+async function main() {
+    // Setup provider and signer (e.g., MetaMask or a private key wallet)
+    const provider = new ethers.JsonRpcProvider("https://bsc-testnet-dataseed.bnbchain.org/");
+    const signer = new ethers.Wallet("", provider);
 
-// Get the signer (e.g., MetaMask account)
-const signer = new ethers.Wallet("0x79064b7cadf24c1b32c008c4823f35dc5f3c73d9a3e115784eaa0b52f075f41a")
+    // Contract address and ABI (Application Binary Interface)
+    const contractAddress = "0x639C9EFc88adD39665f710Ef0F6D79633539a1b9"; // Replace with your deployed contract address
+  
+    
+    
 
-// Define the domain for EIP-712
-const domain = {
-  name: "EIP712Example",
-  version: "1",
-  chainId: 97,  // Mainnet chainId
-  verifyingContract: "0xBc86c8D4F1bCDaDa54C474B1a6186fbA626567A7",  // Contract address
-};
+    // Define the domain for EIP-712
+    const domain = {
+        name: "DexIdeo",
+        version: "1",
+        chainId: 97,  // BSC Testnet
+        verifyingContract: contractAddress
+    };
 
-// Define the types for the EIP-712 data
-const types = {
-  Greeting: [
-    { name: "message", type: "string" },
-    { name: "timestamp", type: "uint256" }
-  ],
-};
+    // Define the types for the EIP-712 data
+    const types = {
+        tokenData: [
+            { name: "tokenAddress", type: "address" },
+            { name: "priceFeed", type: "address" }
+        ]
+    };
 
-// Define the actual message to sign
-const message = {
-  message: "Hello EIP-712",
-  timestamp: 1682098399,  // Example timestamp
-};
+    // Define the data to be signed
+    const message = {
+        tokenAddress: "0xeD697A29009B6F78d342807f22B3e4AC61706718",  // Replace with the token address
+        priceFeed: "0x957Eb0316f02ba4a9De3D308742eefd44a3c1719"  // Replace with the price feed address
+    };
 
-// Sign the typed data (EIP-712 signature)
-async function signTypedData() {
-  const signature = await signer.signTypedData(domain, types, message);
-  console.log("Signature: ", signature);
+    // Sign the EIP-712 typed data
+    const signature = await signer.signTypedData(domain, types, message);
+    console.log("Signature:", signature);
+    console.log("Address",signer.address)
+    // Call the verifyAndAddToken function in the contract with the signed data
 
-  console.log(signer.address);
 }
 
-signTypedData();
+// Run the main function
+main().catch((error) => {
+    console.error(error);
+    process.exit(1);
+});
