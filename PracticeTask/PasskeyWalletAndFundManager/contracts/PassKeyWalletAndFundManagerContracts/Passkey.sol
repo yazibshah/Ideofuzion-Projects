@@ -1,11 +1,16 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.25;
+pragma solidity 0.8.25;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+// import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
 import "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/cryptography/EIP712Upgradeable.sol";
+import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Utils.sol";
+import "hardhat/console.sol";
 
-contract PasskeyWallet is Ownable, EIP712{
+contract PasskeyWallet is Initializable,OwnableUpgradeable, EIP712Upgradeable{
 
     // Struct 
     struct withdrawlData{
@@ -18,11 +23,16 @@ contract PasskeyWallet is Ownable, EIP712{
     // Addresses
     address public fundManager;
 
+    // EIP712 Initilize:
+    string public a;
+    string public b;
     // Events
     event WithDrawnByOwner(address owner, uint256 amount);
 
-    constructor(address owner) Ownable(owner) EIP712("FundManager","1"){
-        
+// Initialize function (called only once)
+    function initialize(address owner) public initializer {
+        __Ownable_init(owner);
+        __EIP712_init(a,b);
     }
 
     function deposit() external payable onlyOwner{
@@ -46,6 +56,10 @@ contract PasskeyWallet is Ownable, EIP712{
 
     function setFundManager(address _fundManager) external{
         fundManager=_fundManager;
+    }
+
+    function upgradeProxy(address newImplementation) public payable{
+        ERC1967Utils.upgradeToAndCall(newImplementation, abi.encodeWithSignature("mul()"));
     }
 
 

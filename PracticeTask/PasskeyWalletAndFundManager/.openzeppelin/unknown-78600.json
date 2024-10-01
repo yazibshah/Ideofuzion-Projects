@@ -1,0 +1,230 @@
+{
+  "manifestVersion": "3.2",
+  "proxies": [
+    {
+      "address": "0x1776B3854771545dEE908ccdbe108361f0Da41Ab",
+      "txHash": "0x30b8379b5dcf558ffd41e9a771627be098fb66d94cfc5ac80a4085337ad2c42f",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x435317D490A889c882da5b81372cCDE9c2F94258",
+      "txHash": "0x229a754e361ee4f5aa1b1e87ecc9a43f9a53a781628f2c32c6767c2175ac0fe1",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xbe3561D8bD8839336F123b6d349Ff323a5A66dbC",
+      "txHash": "0x2cbbe4d5c87ea37f84e88ff4ca225726a89deb2db9be2dfc4f6a29382aaedc91",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x1914a861671907571477f72bf9097422C55Df4E6",
+      "txHash": "0x1af68288a703ef781c9273ed02ce61a9b6f4fcabf9dded0ac02865c5328573b8",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xce78608366FED9dCc9b5c8C5b4284a213e83F697",
+      "txHash": "0x07f79987a423715b8d8b0afd9d681c17300fb189ccef4e8b36795c529cda7f65",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xA4e7640A71Ec9119BCE80F39700b0749bEee7a58",
+      "txHash": "0x6596af4138eacf099f996086d9fe03805fdeab98c60a86c3c4983e8930a6e468",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xEcC03Da12456b495f6bb05f4EE22576AEA240e54",
+      "txHash": "0x5acb8ad01a671bf05915410349ce62cd63e03e65127476ab6357c5387351d824",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xFc4e4805cADF004348302388C64567Ec01553f70",
+      "txHash": "0x38df8204aac7bf2ee0c8d8432c1f552fbf4591a0ba27670d743c1d8072a5b6d5",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xBE64bFAd5Db45Ee01B8094Ca3fC241bd4411d730",
+      "txHash": "0xd0b507254e6da7d2a3dcfb49e51122ad536f3b0088552a4c9807c40f6831bf19",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xFE44520f1365f54A58dC26d30E4Ef07745DC76ee",
+      "txHash": "0x2d7d03bb400bf5e9f44b370a47a19ff76eaae01ce0fbd0fa7ac209402273c849",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xb8c61720d171433732326327C679fA117dEF3B9B",
+      "txHash": "0x48adde0abf8b60fa8ffecca14e65c3c752824d32ba8ac1419aa111a7a0d531d6",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x59b082CD79a2489cfbe8B28dBee3b9e24Bb3C27B",
+      "txHash": "0x094e7284617c42a7a45af242c23bcc1ea2d1ba5ca4edd7a5bd7354eacd4dc57b",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "6cca2c6ef1a58e926ff0c85974a89ab4a24ef39aedcf1947589acb38b95eed29": {
+      "address": "0x2285BA65d78be0eF906c237bD3532fD3EF883523",
+      "txHash": "0x6a263b5540ce1389780cea4844be60d201dd1e8454342661ac495a9b69c2bf04",
+      "layout": {
+        "solcVersion": "0.8.25",
+        "storage": [
+          {
+            "label": "fundManager",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_address",
+            "contract": "PasskeyWallet",
+            "src": "contracts\\PassKeyWalletAndFundManagerContracts\\PasskeyWallet.sol:20"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(EIP712Storage)185_storage": {
+            "label": "struct EIP712Upgradeable.EIP712Storage",
+            "members": [
+              {
+                "label": "_hashedName",
+                "type": "t_bytes32",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_hashedVersion",
+                "type": "t_bytes32",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "_name",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "_version",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "3"
+              }
+            ],
+            "numberOfBytes": "128"
+          },
+          "t_struct(InitializableStorage)80_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)13_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.EIP712": [
+            {
+              "contract": "EIP712Upgradeable",
+              "label": "_hashedName",
+              "type": "t_bytes32",
+              "src": "@openzeppelin\\contracts-upgradeable\\utils\\cryptography\\EIP712Upgradeable.sol:39",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "EIP712Upgradeable",
+              "label": "_hashedVersion",
+              "type": "t_bytes32",
+              "src": "@openzeppelin\\contracts-upgradeable\\utils\\cryptography\\EIP712Upgradeable.sol:41",
+              "offset": 0,
+              "slot": "1"
+            },
+            {
+              "contract": "EIP712Upgradeable",
+              "label": "_name",
+              "type": "t_string_storage",
+              "src": "@openzeppelin\\contracts-upgradeable\\utils\\cryptography\\EIP712Upgradeable.sol:43",
+              "offset": 0,
+              "slot": "2"
+            },
+            {
+              "contract": "EIP712Upgradeable",
+              "label": "_version",
+              "type": "t_string_storage",
+              "src": "@openzeppelin\\contracts-upgradeable\\utils\\cryptography\\EIP712Upgradeable.sol:44",
+              "offset": 0,
+              "slot": "3"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin\\contracts-upgradeable\\access\\OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

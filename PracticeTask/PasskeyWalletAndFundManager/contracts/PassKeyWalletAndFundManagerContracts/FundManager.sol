@@ -1,15 +1,15 @@
-// SPDX-License-Identifier: MIT
+/* // SPDX-License-Identifier: MIT
 pragma solidity 0.8.25;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/math/Math.sol"; // Import Math.sol
 import "./Interface/IFundManager.sol";
 
-contract FundManager is Ownable(tx.origin), ReentrancyGuard ,IFundManager{
+contract FundManager is Ownable(tx.origin), ReentrancyGuard, IFundManager {
     using EnumerableSet for EnumerableSet.AddressSet;
-    using SafeMath for uint256;
+    using Math for uint256; // Use Math library functions
 
     EnumerableSet.AddressSet private investors;
 
@@ -29,8 +29,11 @@ contract FundManager is Ownable(tx.origin), ReentrancyGuard ,IFundManager{
     function deposit() external payable {
         require(msg.value > 0, "Deposit must be greater than 0");
 
-        // Add to user's deposit balance
-        deposits[msg.sender] = deposits[msg.sender].add(msg.value);
+        // Add to user's deposit balance using tryAdd
+        (bool success, uint256 newDeposit) = deposits[msg.sender].tryAdd(msg.value);
+        require(success, "Addition overflow");
+
+        deposits[msg.sender] = newDeposit;
 
         // Add to the investor set if not already present
         if (!hasDeposited[msg.sender]) {
@@ -43,7 +46,9 @@ contract FundManager is Ownable(tx.origin), ReentrancyGuard ,IFundManager{
 
     // User-defined strategy
     function setStrategy(uint256 investPercentage, uint256 withdrawPercentage, uint256 dcaPercentage) external {
-        require(investPercentage.add(withdrawPercentage).add(dcaPercentage) == 100, "Percentages must sum to 100");
+        // Ensure percentages sum to 100 using Math.sol functions
+        uint256 totalPercentage = investPercentage+(withdrawPercentage)+(dcaPercentage);
+        require(totalPercentage == 100, "Percentages must sum to 100");
         
         userStrategies[msg.sender] = Strategy(investPercentage, withdrawPercentage, dcaPercentage);
 
@@ -54,52 +59,50 @@ contract FundManager is Ownable(tx.origin), ReentrancyGuard ,IFundManager{
     function withdraw(uint256 amount) external nonReentrant {
         require(deposits[msg.sender] >= amount, "Insufficient balance");
 
-        // Deduct from user's deposit
-        deposits[msg.sender] = deposits[msg.sender].sub(amount);
+        // Deduct from user's deposit using trySub
+        (bool success, uint256 newDeposit) = deposits[msg.sender].trySub(amount);
+        require(success, "Subtraction underflow");
+
+        deposits[msg.sender] = newDeposit;
 
         // Transfer the requested amount back to the user
-        (bool success,) = payable(msg.sender).call{value: amount}("");
-        require(success, "Withdrawal failed");
+        (bool transferSuccess,) = payable(msg.sender).call{value: amount}("");
+        require(transferSuccess, "Withdrawal failed");
 
-        emit Withdrawn(msg.sender, amount, success);
+        emit Withdrawn(msg.sender, amount, transferSuccess);
     }
 
-    // Function to distribute funds based on user strategies
     // Function to distribute funds based on user strategies
     function distribute() external onlyOwner {
-        uint256 totalFunds = address(this).balance;
-        require(totalFunds > 0, "No funds to distribute");
+    uint256 totalFunds = address(this).balance;
+    require(totalFunds > 0, "No funds to distribute");
 
-        uint256 totalDeposits = getTotalDeposits();
-        require(totalDeposits > 0, "Total deposits must be greater than 0");
+    uint256 totalDeposits = getTotalDeposits();
+    require(totalDeposits > 0, "Total deposits must be greater than 0");
 
-        // Iterate through each investor
-        for (uint256 i = 0; i < investors.length(); i++) {
-            address user = investors.at(i);
-            uint256 userDeposit = deposits[user];
+    for (uint256 i = 0; i < investors.length(); i++) {
+        address user = investors.at(i);
+        uint256 userDeposit = deposits[user];
 
-            // Calculate the user's share of the total funds
-            uint256 userShare = userDeposit.mul(totalFunds).div(totalDeposits);
+        // Calculate the user's share of the total funds
+        uint256 shareAmount = userDeposit * totalFunds / totalDeposits;
 
-            // Get user's strategy
-            Strategy memory strategy = userStrategies[user];
+        Strategy memory strategy = userStrategies[user];
 
-            // Calculate amounts based on the user's strategy
-            uint256 investAmount = userShare.mul(strategy.investPercentage).div(100);
-            uint256 withdrawAmount = userShare.mul(strategy.withdrawPercentage).div(100);
-            uint256 dcaAmount = userShare.mul(strategy.dcaPercentage).div(100);
+        uint256 investAmount = (shareAmount * strategy.investPercentage) / 100;
+        uint256 withdrawAmount = (shareAmount * strategy.withdrawPercentage) / 100;
+        uint256 dcaAmount = (shareAmount * strategy.dcaPercentage) / 100;
 
-            // Transfer the calculated amount to the user
-            uint256 totalAmount = investAmount.add(withdrawAmount).add(dcaAmount);
+        uint256 finalAmount = investAmount + withdrawAmount + dcaAmount;
 
-            (bool success,) = payable(user).call{value: totalAmount}("");
-            require(success, "Distribution transfer failed");
+        // Transfer the calculated amount to the user
+        (bool transferSuccess,) = payable(user).call{value: finalAmount}("");
+        require(transferSuccess, "Distribution transfer failed");
 
-            emit Distributed(investAmount, withdrawAmount, dcaAmount);
-        }      
-        
-        
+        emit Distributed(investAmount, withdrawAmount, dcaAmount);
     }
+}
+
 
     // Function to return the number of investors
     function getInvestorCount() external view returns (uint256) {
@@ -110,7 +113,9 @@ contract FundManager is Ownable(tx.origin), ReentrancyGuard ,IFundManager{
     function getTotalDeposits() public view returns (uint256) {
         uint256 totalDeposits = 0;
         for (uint256 i = 0; i < investors.length(); i++) {
-            totalDeposits = totalDeposits.add(deposits[investors.at(i)]);
+            (bool success, uint256 deposit) = totalDeposits.tryAdd(deposits[investors.at(i)]);
+            require(success, "Addition overflow");
+            totalDeposits = deposit;
         }
         return totalDeposits;
     }
@@ -128,3 +133,4 @@ contract FundManager is Ownable(tx.origin), ReentrancyGuard ,IFundManager{
 
     receive() external payable { }
 }
+ */
